@@ -1,6 +1,6 @@
 console.log('This is my TypeScript Minesweeper');
 
-var fields: { clicked: boolean, val: number }[][] = [];
+var fields: { clicked: boolean, open: boolean, val: number }[][] = [];
 var mines: number = 6;
 var size: number = 10;
 
@@ -13,7 +13,7 @@ function board_init() {
     for (let i: number = 0; i < size; i++) {
         fields[i] = [];
         for (let j: number = 0; j < size; j++) {
-            fields[i][j] = { clicked: false, val: 0 };
+            fields[i][j] = { clicked: false, open: false, val: 0 };
         }
     }
 
@@ -30,7 +30,7 @@ function board_init() {
         let pos: any = Array.from(mine);
 
         for (let i: number = 0; i < pos.length; i++) {
-            fields[pos[i].x][pos[i].y] = { clicked: false, val: -1 };
+            fields[pos[i].x][pos[i].y] = { clicked: false, open: false, val: -1 };
         }
     }
 }
@@ -45,6 +45,11 @@ function mark(x: number, y: number) {
     renderBoard();
 }
 
+function open_cell(x: number, y: number) {
+    if (fields[x][y].open === false) { fields[x][y].open = true; }
+    renderBoard();
+}
+
 
 function renderBoard() {
     board.innerHTML = "";
@@ -54,8 +59,9 @@ function renderBoard() {
                 document.createElement(
                     "div"
                 );
-            if (fields[i][j].val < 0) {
+            if (fields[i][j].open === true) {
                 cell.className = "open";
+                cell.textContent = "";
             } else {
                 cell.className = "cell";
                 cell.textContent = "";
@@ -67,7 +73,9 @@ function renderBoard() {
                     "click",
                     () => mark(i, j)
                 );
+
             }
+            cell.addEventListener("contextmenu", function (ev) { ev.preventDefault(); open_cell(i, j); false });
             board.appendChild(cell);
 
         }

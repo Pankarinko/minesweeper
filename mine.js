@@ -8,7 +8,7 @@ function board_init() {
     for (let i = 0; i < size; i++) {
         fields[i] = [];
         for (let j = 0; j < size; j++) {
-            fields[i][j] = { clicked: false, val: 0 };
+            fields[i][j] = { clicked: false, open: false, val: 0 };
         }
     }
     const mine = new Set();
@@ -21,7 +21,7 @@ function board_init() {
         }
         let pos = Array.from(mine);
         for (let i = 0; i < pos.length; i++) {
-            fields[pos[i].x][pos[i].y] = { clicked: false, val: -1 };
+            fields[pos[i].x][pos[i].y] = { clicked: false, open: false, val: -1 };
         }
     }
 }
@@ -34,13 +34,20 @@ function mark(x, y) {
     }
     renderBoard();
 }
+function open_cell(x, y) {
+    if (fields[x][y].open === false) {
+        fields[x][y].open = true;
+    }
+    renderBoard();
+}
 function renderBoard() {
     board.innerHTML = "";
     for (let i = 0; i < size; i++) {
         for (let j = 0; j < size; j++) {
             const cell = document.createElement("div");
-            if (fields[i][j].val < 0) {
+            if (fields[i][j].open === true) {
                 cell.className = "open";
+                cell.textContent = "";
             }
             else {
                 cell.className = "cell";
@@ -50,6 +57,7 @@ function renderBoard() {
                 }
                 cell.addEventListener("click", () => mark(i, j));
             }
+            cell.addEventListener("contextmenu", function (ev) { ev.preventDefault(); open_cell(i, j); false; });
             board.appendChild(cell);
         }
         board.appendChild(document.createElement("br"));
