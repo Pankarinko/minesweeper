@@ -47,3 +47,57 @@
      background-color: #F53326;
      color: #101419;
  }
+
+ .lost {
+     width: 700px;
+     height: 700px;
+     display: inline-block;
+     margin-top: 10px;
+     text-align: center;
+     vertical-align: center;
+     font-size: 32px;
+     cursor: pointer;
+     color: white;
+ }
+
+ .restart {
+     width: 200px;
+     height: 50px;
+     border-radius: 8px;
+     border: 1.5px solid #476C9B;
+     display: inline-block;
+     text-align: center;
+     vertical-align: middle;
+     font-size: 27px;
+     cursor: pointer;
+     background-color: #ADD9F4;
+     color: #D18069;
+ }
+
+ .restart:hover {
+     width: 200px;
+     height: 50px;
+     border-radius: 8px;
+     border: 1.5px solid #355783;
+     display: inline-block;
+     text-align: center;
+     vertical-align: middle;
+     font-size: 27px;
+     cursor: pointer;
+     background-color: #76a8c8;
+     color: #c35739;
+ }
+
+ .restart:active {
+     width: 200px;
+     height: 50px;
+     border-radius: 8px;
+     border: 1.5px solid #1a3250;
+     display: inline-block;
+     text-align: center;
+     vertical-align: middle;
+     font-size: 27px;
+     cursor: pointer;
+     background-color: #5088b3;
+     color: #9b3f25;
+ }

@@ -4,6 +4,7 @@ var fields = [];
 var mines = 10;
 var size = 10;
 const board = document.getElementById("board");
+const result = document.getElementById("result");
 function board_init() {
     for (let i = 0; i < size; i++) {
         fields[i] = [];
@@ -16,7 +17,7 @@ function board_init() {
         const randomNumx = Math.floor(Math.random() * (size));
         const randomNumy = Math.floor(Math.random() * (size));
         const elem = { x: randomNumx, y: randomNumy };
-        if (mine.has(elem) == false) {
+        if (mine.has(elem) === false) {
             mine.add(elem);
         }
         let pos = Array.from(mine);
@@ -31,12 +32,7 @@ function board_init() {
     }
 }
 function mark(x, y) {
-    if (fields[x][y].clicked === false) {
-        fields[x][y].clicked = true;
-    }
-    else {
-        fields[x][y].clicked = false;
-    }
+    fields[x][y].clicked = !fields[x][y].clicked;
     renderBoard();
 }
 function open_cell(x, y) {
@@ -45,14 +41,17 @@ function open_cell(x, y) {
         for (let i = -1; i < 2; i++) {
             for (let j = -1; j < 2; j++) {
                 if (x + i >= 0 && x + i < size && y + j >= 0 && y + j < size) {
-                    //if (fields[x + i][y + j].val === 0) {
-                    //    open_cell(x + i, y + j);
-                    //}
+                    if ((i !== 0 || j !== 0) && fields[x + i][y + j].val === 0 && fields[x + i][y + j].open !== true) {
+                        open_cell(x + i, y + j);
+                    }
                     fields[x + i][y + j].open = true;
                 }
             }
         }
     }
+}
+function open_cells(x, y) {
+    open_cell(x, y);
     renderBoard();
 }
 function set_numbers(x, y) {
@@ -71,12 +70,25 @@ function set_numbers(x, y) {
     }
     fields[x][y].val = mines;
 }
+function check_win() {
+    let won = true;
+    for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+            if (fields[i][j].val !== -1 && fields[i][j].open !== true) {
+                won = false;
+            }
+        }
+    }
+    return won;
+}
 function renderBoard() {
     board.innerHTML = "";
+    result.innerHTML = "";
+    let lost = false;
     for (let i = 0; i < size; i++) {
         for (let j = 0; j < size; j++) {
             const cell = document.createElement("div");
-            if (fields[i][j].open === true) {
+            if (fields[i][j].open) {
                 cell.className = "open";
                 if (fields[i][j].val !== 0) {
                     cell.textContent = String(fields[i][j].val);
@@ -84,6 +96,7 @@ function renderBoard() {
                 if (fields[i][j].val === -1) {
                     cell.textContent = "󰚑";
                     cell.className = "mine";
+                    lost = true;
                 }
             }
             else {
@@ -92,12 +105,24 @@ function renderBoard() {
                 if (fields[i][j].clicked === true) {
                     cell.textContent = "󰚑";
                 }
-                cell.addEventListener("click", () => mark(i, j));
-                cell.addEventListener("contextmenu", function (ev) { ev.preventDefault(); open_cell(i, j); false; });
+                cell.addEventListener("click", () => open_cells(i, j));
+                cell.addEventListener("contextmenu", function (ev) { ev.preventDefault(); mark(i, j); false; });
             }
             board.appendChild(cell);
         }
         board.appendChild(document.createElement("br"));
+    }
+    if (lost) {
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                fields[i][j].open = true;
+            }
+        }
+        const msg = document.createElement("div");
+        msg.className = "lost";
+        msg.textContent = "You Lost!";
+        result.appendChild(msg);
+        renderBoard();
     }
 }
 board_init();

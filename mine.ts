@@ -9,6 +9,8 @@ const board: any =
         "board"
     );
 
+const result: any = document.getElementById("result");
+
 function board_init() {
     for (let i: number = 0; i < size; i++) {
         fields[i] = [];
@@ -23,7 +25,7 @@ function board_init() {
         const randomNumx = Math.floor(Math.random() * (size));
         const randomNumy = Math.floor(Math.random() * (size));
         const elem: { x: number, y: number } = { x: randomNumx, y: randomNumy };
-        if (mine.has(elem) == false) {
+        if (mine.has(elem) === false) {
             mine.add(elem);
         }
 
@@ -42,10 +44,7 @@ function board_init() {
 
 
 function mark(x: number, y: number) {
-    if (fields[x][y].clicked === false) { fields[x][y].clicked = true; }
-    else {
-        fields[x][y].clicked = false;
-    }
+    fields[x][y].clicked = !fields[x][y].clicked;
     renderBoard();
 }
 
@@ -55,14 +54,18 @@ function open_cell(x: number, y: number) {
         for (let i: number = -1; i < 2; i++) {
             for (let j: number = -1; j < 2; j++) {
                 if (x + i >= 0 && x + i < size && y + j >= 0 && y + j < size) {
-                    //if (fields[x + i][y + j].val === 0) {
-                    //    open_cell(x + i, y + j);
-                    //}
+                    if ((i !== 0 || j !== 0) && fields[x + i][y + j].val === 0 && fields[x + i][y + j].open !== true) {
+                        open_cell(x + i, y + j);
+                    }
                     fields[x + i][y + j].open = true;
                 }
             }
         }
     }
+}
+
+function open_cells(x: number, y: number) {
+    open_cell(x, y);
     renderBoard();
 }
 
@@ -84,17 +87,30 @@ function set_numbers(x: number, y: number) {
     fields[x][y].val = mines;
 }
 
-
+function check_win() {
+    let won = true;
+    for (let i: number = 0; i < size; i++) {
+        for (let j: number = 0; j < size; j++) {
+            if (fields[i][j].val !== -1 && fields[i][j].open !== true) {
+                won = false;
+            }
+        }
+    }
+    return won;
+}
 
 function renderBoard() {
+
     board.innerHTML = "";
+    result.innerHTML = "";
+    let lost: boolean = false;
     for (let i: number = 0; i < size; i++) {
         for (let j: number = 0; j < size; j++) {
             const cell =
                 document.createElement(
                     "div"
                 );
-            if (fields[i][j].open === true) {
+            if (fields[i][j].open) {
                 cell.className = "open";
                 if (fields[i][j].val !== 0) {
                     cell.textContent = String(fields[i][j].val);
@@ -102,6 +118,7 @@ function renderBoard() {
                 if (fields[i][j].val === -1) {
                     cell.textContent = "󰚑";
                     cell.className = "mine";
+                    lost = true;
                 }
             } else {
                 cell.className = "cell";
@@ -112,9 +129,9 @@ function renderBoard() {
 
                 cell.addEventListener(
                     "click",
-                    () => mark(i, j)
+                    () => open_cells(i, j)
                 );
-                cell.addEventListener("contextmenu", function (ev) { ev.preventDefault(); open_cell(i, j); false });
+                cell.addEventListener("contextmenu", function (ev) { ev.preventDefault(); mark(i, j); false });
             }
 
             board.appendChild(cell);
@@ -123,6 +140,21 @@ function renderBoard() {
         board.appendChild(
             document.createElement("br")
         );
+    }
+    if (lost) {
+        for (let i: number = 0; i < size; i++) {
+            for (let j: number = 0; j < size; j++) {
+                fields[i][j].open = true;
+            }
+        }
+        const msg =
+            document.createElement(
+                "div"
+            );
+        msg.className = "lost";
+        msg.textContent = "You Lost!"
+        result.appendChild(msg);
+        renderBoard();
     }
 }
 
