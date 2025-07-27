@@ -45,7 +45,7 @@ function board_init() {
 
 function mark(x: number, y: number) {
     fields[x][y].clicked = !fields[x][y].clicked;
-    renderBoard();
+    renderBoard(false);
 }
 
 function open_cell(x: number, y: number) {
@@ -66,7 +66,7 @@ function open_cell(x: number, y: number) {
 
 function open_cells(x: number, y: number) {
     open_cell(x, y);
-    renderBoard();
+    renderBoard(false);
 }
 
 function set_numbers(x: number, y: number) {
@@ -99,7 +99,7 @@ function check_win() {
     return won;
 }
 
-function renderBoard() {
+function renderBoard(last_render: boolean) {
 
     board.innerHTML = "";
     result.innerHTML = "";
@@ -141,7 +141,8 @@ function renderBoard() {
             document.createElement("br")
         );
     }
-    if (lost) {
+
+    if (lost && !last_render) {
         for (let i: number = 0; i < size; i++) {
             for (let j: number = 0; j < size; j++) {
                 fields[i][j].open = true;
@@ -154,13 +155,13 @@ function renderBoard() {
         msg.className = "lost";
         msg.textContent = "You Lost!"
         result.appendChild(msg);
-        renderBoard();
+        renderBoard(true);
     }
 }
 
 
 board_init();
-renderBoard();
+renderBoard(false);
 
 
 
