@@ -83,7 +83,6 @@ function check_win() {
 }
 function renderBoard(last_render) {
     board.innerHTML = "";
-    result.innerHTML = "";
     let lost = false;
     for (let i = 0; i < size; i++) {
         for (let j = 0; j < size; j++) {
@@ -121,7 +120,7 @@ function renderBoard(last_render) {
         const msg = document.createElement("div");
         msg.className = "lost";
         msg.textContent = "You Lost!";
-        result.appendChild(msg);
+        result.append(msg);
         renderBoard(true);
     }
 }

@@ -102,7 +102,6 @@ function check_win() {
 function renderBoard(last_render: boolean) {
 
     board.innerHTML = "";
-    result.innerHTML = "";
     let lost: boolean = false;
     for (let i: number = 0; i < size; i++) {
         for (let j: number = 0; j < size; j++) {
@@ -154,7 +153,7 @@ function renderBoard(last_render: boolean) {
             );
         msg.className = "lost";
         msg.textContent = "You Lost!"
-        result.appendChild(msg);
+        result.append(msg);
         renderBoard(true);
     }
 }
