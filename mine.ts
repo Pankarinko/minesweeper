@@ -10,6 +10,7 @@ const board: any =
     );
 
 const result: any = document.getElementById("result");
+const restart: any = document.getElementById("restart");
 
 function board_init() {
     for (let i: number = 0; i < size; i++) {
@@ -136,10 +137,9 @@ function renderBoard(last_render: boolean) {
             board.appendChild(cell);
 
         }
-        board.appendChild(
-            document.createElement("br")
-        );
+
     }
+
 
     if (lost && !last_render) {
         for (let i: number = 0; i < size; i++) {
@@ -155,12 +155,17 @@ function renderBoard(last_render: boolean) {
         msg.textContent = "You Lost!"
         result.append(msg);
         renderBoard(true);
+    } else if (!lost) {
+        result.removeChild(result.firstChild);
     }
 }
 
+function start() {
+    board_init();
+    renderBoard(false);
+}
 
-board_init();
-renderBoard(false);
+start()
 
 
 

@@ -5,6 +5,7 @@ var mines = 10;
 var size = 10;
 const board = document.getElementById("board");
 const result = document.getElementById("result");
+const restart = document.getElementById("restart");
 function board_init() {
     for (let i = 0; i < size; i++) {
         fields[i] = [];
@@ -109,7 +110,6 @@ function renderBoard(last_render) {
             }
             board.appendChild(cell);
         }
-        board.appendChild(document.createElement("br"));
     }
     if (lost && !last_render) {
         for (let i = 0; i < size; i++) {
@@ -123,6 +123,12 @@ function renderBoard(last_render) {
         result.append(msg);
         renderBoard(true);
     }
+    else if (!lost) {
+        result.removeChild(result.firstChild);
+    }
 }
-board_init();
-renderBoard(false);
+function start() {
+    board_init();
+    renderBoard(false);
+}
+start();

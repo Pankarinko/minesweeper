@@ -12,17 +12,18 @@
  }
 
  .board {
-     width: 318px;
+     width: 320px;
      height: 318px;
-     display: inline-block;
+     display: flexbox;
+     flex-wrap: wrap;
      box-shadow: 4px 4px 4px #0b263955;
      text-align: center;
      vertical-align: center;
  }
 
  .cell {
-     width: 30px;
-     height: 30px;
+     width: 28.8px;
+     height: 28.8px;
      border: 1.2px solid #476C9B;
      display: inline-block;
      text-align: center;
@@ -37,7 +38,6 @@
  .open {
      width: 30px;
      height: 30px;
-     border: 1.2px solid #476C9B;
      display: inline-block;
      text-align: center;
      vertical-align: middle;
